@@ -1,6 +1,6 @@
 #include <iostream>
-#include "account.h"
 #include "md5.h"
+#include "account.h"
 
 Account::Account(std::string username, std::string password, bool isAdmin, bool isEmpty) :
 	username(username),
@@ -28,20 +28,14 @@ int UserAccount::changePassword(std::string oldPassword, std::string newPassword
 	return 2; // a user account can't change its password
 }
 
-std::ostream& operator<<(std::ostream& out, AdminAccount a) {
-	out << "Username: "
-		<< a.getUsername()
-		<< "\nPassword hash (MD5): "
-		<< a.getPwHash()
-		<< "\nIs admin: yes\n";
-	return out;
-}
-
-std::ostream& operator<<(std::ostream& out, UserAccount& a) {
-	out << "Username: "
-		<< a.getUsername()
-		<< "\nPassword hash (MD5): "
-		<< a.getPwHash()
-		<< "\nIs admin: no\n";
-	return out;
+std::ostream& operator<<(std::ostream& out, Account* a) {
+    out << "Username: "
+        << a->getUsername()
+        << "\nPassword hash (MD5): "
+        << a->getPwHash()
+		<< "\nIs admin: "
+		<< a->getAdmin()
+		<< "\nIs empty: "
+		<< a->getEmpty();
+    return out;
 }

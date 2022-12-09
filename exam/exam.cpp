@@ -13,14 +13,18 @@ public:
         static Settings instance;
         return instance;
     }
-    Account& getAccount() {
-        return *account;
+    Account* getAccount() {
+        return account;
     }
     int login(std::string username, std::string password) {
         if (!(accounts.count(username))) return 2; // no such account found
         if (!(accounts[username]->checkPassword(password))) return 1; // wrong password
+        if (account->getEmpty()) delete account;
         account = accounts[username];
         return 0; // good password
+    }
+    void logout() {
+        account = new EmptyAccount();
     }
     void reg(std::string username, std::string password, bool isAdmin) {
         if (isAdmin)
@@ -40,12 +44,14 @@ public:
 
 int main() {
     Settings::getInstance().reg("among", "us", true);
+    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
     std::cout << Settings::getInstance().login("among", "us") << std::endl; // 0
-//    std::cout << Settings::getInstance().getAccount();
+    std::cout << Settings::getInstance().getAccount() << std::endl; // among
+    Settings::getInstance().logout();
     std::cout << Settings::getInstance().login("among", "us!") << std::endl; // 1
-//    std::cout << Settings::getInstance().getAccount();
+    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
     std::cout << Settings::getInstance().login("amogn", "us") << std::endl; // 2
- //   std::cout << Settings::getInstance().getAccount();
+    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

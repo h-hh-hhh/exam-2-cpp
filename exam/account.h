@@ -8,6 +8,8 @@ public:
     bool checkPassword(std::string password);
     std::string getUsername() { return username; }
     std::string getPwHash() { return pwHash; }
+    bool getAdmin() { return isAdmin; }
+    bool getEmpty() { return isEmpty; }
 protected:
     std::string username;
     std::string pwHash;
@@ -41,5 +43,4 @@ public:
 protected:
 };
 
-std::ostream& operator<<(std::ostream& out, AdminAccount a);
-std::ostream& operator<<(std::ostream& out, UserAccount a);
+std::ostream& operator<<(std::ostream& out, Account* a);
