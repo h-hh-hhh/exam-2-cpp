@@ -2,11 +2,50 @@
 //
 
 #include <iostream>
+#include <map>
 
-using namespace std;
+#include "md5.h"
+#include "account.h"
+
+class Settings {
+public:
+    static Settings& getInstance() {
+        static Settings instance;
+        return instance;
+    }
+    Account& getAccount() {
+        return *account;
+    }
+    int login(std::string username, std::string password) {
+        if (!(accounts.count(username))) return 2; // no such account found
+        if (!(accounts[username]->checkPassword(password))) return 1; // wrong password
+        account = accounts[username];
+        return 0; // good password
+    }
+    void reg(std::string username, std::string password, bool isAdmin) {
+        if (isAdmin)
+            accounts[username] = new AdminAccount(username, password);
+        else
+            accounts[username] = new UserAccount(username, password);
+    }
+private:
+    Settings() {}
+    Account* account = new EmptyAccount();
+    std::map<std::string, Account*> accounts;
+public:
+    Settings(Settings const&) = delete;
+    void operator=(Settings const&) = delete;
+
+};
 
 int main() {
-    std::cout << "Hello World!\n";
+    Settings::getInstance().reg("among", "us", true);
+    std::cout << Settings::getInstance().login("among", "us") << std::endl; // 0
+//    std::cout << Settings::getInstance().getAccount();
+    std::cout << Settings::getInstance().login("among", "us!") << std::endl; // 1
+//    std::cout << Settings::getInstance().getAccount();
+    std::cout << Settings::getInstance().login("amogn", "us") << std::endl; // 2
+ //   std::cout << Settings::getInstance().getAccount();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
