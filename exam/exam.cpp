@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <string>
 
 #include "md5.h"
 #include "account.h"
@@ -26,15 +27,27 @@ public:
     void logout() {
         account = new EmptyAccount();
     }
-    void reg(std::string username, std::string password, bool isAdmin) {
-        if (isAdmin)
+    int reg(std::string username, std::string password, bool isAdmin) {
+        if (isAdmin && !adminExists) {
             accounts[username] = new AdminAccount(username, password);
-        else
+            adminExists = 1;
+            return 0;
+        }
+        else if (isAdmin && adminExists) {
+            return 1; // admin already exists
+        }
+        else if (!(accounts.count(username))) {
             accounts[username] = new UserAccount(username, password);
+            return 0;
+        }
+        else {
+            return 2; // user already exists
+        }
     }
 private:
     Settings() {}
     Account* account = new EmptyAccount();
+    bool adminExists = 0;
     std::map<std::string, Account*> accounts;
 public:
     Settings(Settings const&) = delete;
@@ -42,16 +55,63 @@ public:
 
 };
 
+int menu(int choice) {
+    int c;
+    switch (choice) {
+    case 0: // non-admin
+        break;
+    case 1: // empty
+        std::cout
+            << "1. register admin\n"
+            << "2. register user\n"
+            << "3. log in\n"
+            << "0. exit\n";
+        break;
+    case 2: // admin
+        break;
+    }
+    std::cin >> c;
+    return c;
+}
+
 int main() {
-    Settings::getInstance().reg("among", "us", true);
-    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
-    std::cout << Settings::getInstance().login("among", "us") << std::endl; // 0
-    std::cout << Settings::getInstance().getAccount() << std::endl; // among
-    Settings::getInstance().logout();
-    std::cout << Settings::getInstance().login("among", "us!") << std::endl; // 1
-    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
-    std::cout << Settings::getInstance().login("amogn", "us") << std::endl; // 2
-    std::cout << Settings::getInstance().getAccount() << std::endl; // empty
+    std::string inputS1, inputS2;
+    int mode, c;
+    for (;/*ever*/;) {
+        mode = ((Settings::getInstance().getAccount()->getAdmin() << 1) | (int)(Settings::getInstance().getAccount()->getEmpty()));
+        c = menu(mode);
+        if (mode == 1) {
+            switch (c) {
+            case 0:
+                return 0;
+                break;
+            case 1:
+                std::cout << "Username: ";
+                std::getline(std::cin >> std::ws, inputS1);
+                std::cout << "Password: ";
+                std::getline(std::cin >> std::ws, inputS2);
+                if (Settings::getInstance().reg(inputS1, inputS2, true)) {
+                    std::cout << "Admin already exists!" << std::endl;
+                }
+                else {
+                    std::cout << "Registered successfully" << std::endl;
+                }
+                break;
+            case 2:
+                std::cout << "Username: ";
+                std::getline(std::cin >> std::ws, inputS1);
+                std::cout << "Password: ";
+                std::getline(std::cin >> std::ws, inputS2);
+                if (Settings::getInstance().reg(inputS1, inputS2, false)) {
+                    std::cout << "User already exists!" << std::endl;
+                }
+                else {
+                    std::cout << "Registered successfully" << std::endl;
+                }
+                break;
+            }
+        }
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
