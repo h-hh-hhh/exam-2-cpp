@@ -12,10 +12,79 @@ class Settings {
 public:
     static Settings& getInstance() {
         static Settings instance;
+        instance.init();
         return instance;
+    }
+    void init() {
+        if (!nextTest) {
+            nextTest = 3;
+            // tests
+            tests.push_back(Test(0));
+            tests.push_back(Test(1));
+            tests.push_back(Test(2));
+            {
+                tests[0].add(Question(
+                    "What is 2+2",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    2,
+                    5
+                ));
+                tests[0].add(Question(
+                    "What is 3+3",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    4,
+                    7
+                ));
+                tests[1].add(Question(
+                    "Where is Ukraine",
+                    "Europe",
+                    "Asia",
+                    "Africa",
+                    "Australia",
+                    1,
+                    6
+                ));
+                tests[1].add(Question(
+                    "What is russia",
+                    "country",
+                    "continent",
+                    "terrorist organization",
+                    "football team",
+                    3,
+                    6
+                ));
+                tests[2].add(Question(
+                    "Formula line",
+                    "y = ax+b",
+                    "y = x^2",
+                    "y = Vx",
+                    "y = ax^2+bx+c",
+                    1,
+                    6
+                ));
+                tests[2].add(Question(
+                    "Formula area for rectangle",
+                    "S = 2ab",
+                    "S = 2(a+b)",
+                    "S = ab",
+                    "S = a+b",
+                    3,
+                    6
+                ));
+            }
+        }
     }
     Account* getAccount() {
         return account;
+    }
+    std::vector<Test>& getTests() {
+        return tests;
     }
     int login(std::string username, std::string password) {
         if (!(accounts.count(username))) return 2; // no such account found
@@ -48,7 +117,9 @@ private:
     Settings() {}
     Account* account = new EmptyAccount();
     bool adminExists = 0;
+    int nextTest = 0;
     std::map<std::string, Account*> accounts;
+    std::vector<Test> tests;
 public:
     Settings(Settings const&) = delete;
     void operator=(Settings const&) = delete;
@@ -81,18 +152,6 @@ int menu(int choice) {
 int main() {
     std::string inputS1, inputS2;
     int mode, c;
-    Test test0(0), test1(1), test2(2);
-    {
-        test0.add(Question(
-            "What is 2+2",
-            "1",
-            "2",
-            "3",
-            "4",
-            2,
-            1
-        ));
-    }
     for (;/*ever*/;) {
         mode = ((Settings::getInstance().getAccount()->getAdmin() << 1) | (int)(Settings::getInstance().getAccount()->getEmpty()));
         c = menu(mode);
@@ -152,17 +211,7 @@ int main() {
             case 1:
                 std::cout << "Enter the test id to take: ";
                 std::cin >> c;
-                switch (c) {
-                case 0:
-                    Settings::getInstance().getAccount()->takeTest(test0);
-                    break;
-                case 1:
-                    Settings::getInstance().getAccount()->takeTest(test1);
-                    break;
-                case 2:
-                    Settings::getInstance().getAccount()->takeTest(test2);
-                    break;
-                }
+                Settings::getInstance().getAccount()->takeTest(Settings::getInstance().getTests()[c]);
                 break;
             case 2:
                 std::cout << "Your average is " << Settings::getInstance().getAccount()->getAverage() << std::endl;

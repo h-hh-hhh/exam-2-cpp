@@ -31,6 +31,7 @@ int UserAccount::changePassword(std::string oldPassword, std::string newPassword
 void UserAccount::takeTest(Test test) {
 	double result = test.take();
 	ocink.insert(std::make_pair(test, result));
+	std::cout << "Your score is " << result << std::endl;
 }
 
 double UserAccount::getAverage() {
