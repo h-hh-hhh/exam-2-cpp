@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include "test.h"
 
 class Account {
 public:
@@ -40,7 +42,9 @@ public:
         Account(username, password, false, false)
     {}
     int changePassword(std::string oldPassword, std::string newPassword);
+    void takeTest(Test test);
 protected:
+    std::multimap<Test, double> ocink;
 };
 
 std::ostream& operator<<(std::ostream& out, Account* a);

@@ -59,10 +59,15 @@ int menu(int choice) {
     int c;
     switch (choice) {
     case 0: // non-admin
+        std::cout
+            << "1. register admin\n"
+            << "2. register user\n"
+            << "3. log in\n"
+            << "0. exit\n";
         break;
     case 1: // empty
         std::cout
-            << "1. register admin\n"
+            << "1. take test\n"
             << "2. register user\n"
             << "3. log in\n"
             << "0. exit\n";
@@ -108,6 +113,32 @@ int main() {
                 else {
                     std::cout << "Registered successfully" << std::endl;
                 }
+                break;
+            case 3:
+                std::cout << "Username: ";
+                std::getline(std::cin >> std::ws, inputS1);
+                std::cout << "Password: ";
+                std::getline(std::cin >> std::ws, inputS2);
+                switch (Settings::getInstance().login(inputS1, inputS2)) {
+                case 0:
+                    std::cout << "Login successful" << std::endl;
+                    break;
+                case 1:
+                case 2:
+                    std::cout << "Login failed! Check your username or password" << std::endl;
+                    break;
+                }
+            }
+        }
+        if (mode == 2) { // admin
+            
+        }
+        if (mode == 0) { // non-admin
+            switch (c) {
+            case 0:
+                return 0;
+                break;
+            case 1:
                 break;
             }
         }

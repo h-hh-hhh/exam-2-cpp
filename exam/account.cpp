@@ -28,6 +28,11 @@ int UserAccount::changePassword(std::string oldPassword, std::string newPassword
 	return 2; // a user account can't change its password
 }
 
+void UserAccount::takeTest(Test test) {
+	double result = test.take();
+	ocink.insert(std::make_pair(test, result));
+}
+
 std::ostream& operator<<(std::ostream& out, Account* a) {
     out << "Username: "
         << a->getUsername()
