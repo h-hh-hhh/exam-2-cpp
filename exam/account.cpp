@@ -33,6 +33,16 @@ void UserAccount::takeTest(Test test) {
 	ocink.insert(std::make_pair(test, result));
 }
 
+double UserAccount::getAverage() {
+	double res = 0;
+	int sz = 0;
+	for (auto i = ocink.begin(); i != ocink.end(); i++) {
+		sz++;
+		res += i->second;
+	}
+	return res / sz;
+}
+
 std::ostream& operator<<(std::ostream& out, Account* a) {
     out << "Username: "
         << a->getUsername()

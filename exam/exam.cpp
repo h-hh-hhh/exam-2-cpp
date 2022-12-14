@@ -58,18 +58,17 @@ public:
 int menu(int choice) {
     int c;
     switch (choice) {
-    case 0: // non-admin
+    case 1: // empty
         std::cout
             << "1. register admin\n"
             << "2. register user\n"
             << "3. log in\n"
             << "0. exit\n";
         break;
-    case 1: // empty
+    case 0: // non-admin
         std::cout
             << "1. take test\n"
-            << "2. register user\n"
-            << "3. log in\n"
+            << "2. show average\n"
             << "0. exit\n";
         break;
     case 2: // admin
@@ -82,6 +81,18 @@ int menu(int choice) {
 int main() {
     std::string inputS1, inputS2;
     int mode, c;
+    Test test0(0), test1(1), test2(2);
+    {
+        test0.add(Question(
+            "What is 2+2",
+            "1",
+            "2",
+            "3",
+            "4",
+            2,
+            1
+        ));
+    }
     for (;/*ever*/;) {
         mode = ((Settings::getInstance().getAccount()->getAdmin() << 1) | (int)(Settings::getInstance().getAccount()->getEmpty()));
         c = menu(mode);
@@ -139,7 +150,22 @@ int main() {
                 return 0;
                 break;
             case 1:
+                std::cout << "Enter the test id to take: ";
+                std::cin >> c;
+                switch (c) {
+                case 0:
+                    Settings::getInstance().getAccount()->takeTest(test0);
+                    break;
+                case 1:
+                    Settings::getInstance().getAccount()->takeTest(test1);
+                    break;
+                case 2:
+                    Settings::getInstance().getAccount()->takeTest(test2);
+                    break;
+                }
                 break;
+            case 2:
+                std::cout << "Your average is " << Settings::getInstance().getAccount()->getAverage() << std::endl;
             }
         }
     }

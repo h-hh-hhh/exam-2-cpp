@@ -7,6 +7,8 @@ public:
     Account() {}
     Account(std::string username, std::string password, bool isAdmin, bool isEmpty);
     virtual int changePassword(std::string oldPassword, std::string newPassword) = 0;
+    virtual void takeTest(Test test) = 0;
+    virtual double getAverage() = 0;
     bool checkPassword(std::string password);
     std::string getUsername() { return username; }
     std::string getPwHash() { return pwHash; }
@@ -25,6 +27,8 @@ public:
         Account("", "", false, true)
     {}
     int changePassword(std::string oldPassword, std::string newPassword);
+    void takeTest(Test test) {}
+    double getAverage() { return 0; }
 };
 
 class AdminAccount : public Account {
@@ -33,6 +37,8 @@ public:
         Account(username, password, true, false)
     {}
     int changePassword(std::string oldPassword, std::string newPassword);
+    void takeTest(Test test) {}
+    double getAverage() { return 0; }
 protected:
 };
 
@@ -43,6 +49,7 @@ public:
     {}
     int changePassword(std::string oldPassword, std::string newPassword);
     void takeTest(Test test);
+    double getAverage();
 protected:
     std::multimap<Test, double> ocink;
 };

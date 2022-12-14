@@ -31,13 +31,16 @@ std::ostream& operator<<(std::ostream& out, Question q);
 
 class Test {
 public:
-	Test() {}
+	int id;
+	Test(int id) : id(id) {}
 	double take();
 	int size();
 	bool operator<(const Test& other) const {
 		return this->id < other.id;
 	}
-	int id;
+	void add(Question q) {
+		questions.push_back(q);
+	}
 protected:
 	std::vector<Question> questions;
 };
